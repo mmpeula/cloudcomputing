@@ -1,14 +1,25 @@
 const http = require('http');
 const url = require('url');
-const fs = require('fs'); // to work with file I/O
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+
+mongoose.connect('mongodb://127.0.0.1:27017/usersDB');
+
+const userSchema = new Schema
+({
+    name: String,
+    email: String,
+    number: Number
+});
+
+// Create a user model
+const User = mongoose.model('User', userSchema);
 
 const PORT = 5000;
 
-// In-memory object to store the users.
-let users = {};
-
-// Create HTTP server
-const server = http.createServer((req, res) => 
+// Create the HTTP server to handle requests
+const server = http.createServer(async (req, res) => 
 {
     const parsedUrl = url.parse(req.url, true);
     const method = req.method;
@@ -18,10 +29,19 @@ const server = http.createServer((req, res) =>
     {
         if (method === 'GET') 
         {
-            // Return all users stored in memory
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify(Object.values(users)));
+            try 
+            {
+                const users = await User.find({});
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify(users));
+            } 
+            catch (err) 
+            {
+                res.statusCode = 500;
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify({ error: 'Internal Server Error' }));
+            }
         } 
         else if (method === 'POST') 
         {
@@ -31,15 +51,28 @@ const server = http.createServer((req, res) =>
                 body += chunk;
             });
 
-            req.on('end', () =>
+            req.on('end', async () => 
             {
                 const newUser = JSON.parse(body);
-                const newId = Date.now().toString(); // Use current timestamp as a unique ID
-                users[newId] = { id: newId, name: newUser.name, email: newUser.email };
+                const user = new User({
+                    name: newUser.name,
+                    email: newUser.email,
+                    number: newUser.number
+                });
 
-                res.statusCode = 201;
-                res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify({ id: newId }));
+                try 
+                {
+                    const savedUser = await user.save();
+                    res.statusCode = 201;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.end(JSON.stringify({  id: savedUser._id }));
+                } 
+                catch (err) 
+                {
+                    res.statusCode = 500;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.end(JSON.stringify({ error: 'Internal Server Error' }));
+                }
             });
         }
     } 
@@ -48,14 +81,23 @@ const server = http.createServer((req, res) =>
         const userId = pathname.split('/')[2];
         if (method === 'GET') 
         {
-            // Return the user with the specified ID
-            if (users[userId]) 
+            try 
             {
-                res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify(users[userId]));
+                const user = await User.findById(userId);
+                if (!user) 
+                {
+                    res.statusCode = 404;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.end(JSON.stringify({ error: 'User Not Found' }));
+                } 
+                else 
+                {
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.end(JSON.stringify(user));
+                }
             } 
-            else 
+            catch (err) 
             {
                 res.statusCode = 404;
                 res.setHeader('Content-Type', 'application/json');
@@ -67,28 +109,34 @@ const server = http.createServer((req, res) =>
             let body = '';
             req.on('data', (chunk) => 
             {
-                body += chunk;  // Collect the body of the request
+                body += chunk;
             });
-    
-            req.on('end', () => 
+
+            req.on('end', async () => 
             {
-                const updatedUser = JSON.parse(body);  // Convert the body to a JSON object
-                
-                // Check if the user with the specified id exists
-                if (users[userId]) 
+                const updatedUser = JSON.parse(body);
+                try 
                 {
-                    // Update the user
-                    users[userId].name = updatedUser.name;
-                    users[userId].email = updatedUser.email;
-    
-                    // Respond with the updated user
-                    res.statusCode = 200;
-                    res.setHeader('Content-Type', 'application/json');
-                    res.end(JSON.stringify(users[userId]));  // Send the updated user in the response
+                    const updatedUserDoc = await User.findByIdAndUpdate(userId, { 
+                        name: updatedUser.name, 
+                        email: updatedUser.email,
+                        number: updatedUser.number
+                    }, { new: true });
+                    if (!updatedUserDoc) 
+                    {
+                        res.statusCode = 404;
+                        res.setHeader('Content-Type', 'application/json');
+                        res.end(JSON.stringify({ error: 'User Not Found' }));
+                    } 
+                    else 
+                    {
+                        res.statusCode = 200;
+                        res.setHeader('Content-Type', 'application/json');
+                        res.end(JSON.stringify(updatedUserDoc));
+                    }
                 } 
-                else 
+                catch (err) 
                 {
-                    // If the user is not found, respond with a 404 error
                     res.statusCode = 404;
                     res.setHeader('Content-Type', 'application/json');
                     res.end(JSON.stringify({ error: 'User Not Found' }));
@@ -97,15 +145,14 @@ const server = http.createServer((req, res) =>
         } 
         else if (method === 'DELETE') 
         {
-            // Delete the user with the specified ID
-            if (users[userId]) 
+            try 
             {
-                delete users[userId];
-
+                // Delete the user by their ID
+                await User.findByIdAndDelete(userId);
                 res.statusCode = 204;
                 res.end();
             } 
-            else 
+            catch (err) 
             {
                 res.statusCode = 404;
                 res.setHeader('Content-Type', 'application/json');
@@ -121,6 +168,7 @@ const server = http.createServer((req, res) =>
     }
 });
 
+// Start the server
 server.listen(PORT, () => 
 {
     console.log(`Server running on http://localhost:${PORT}`);

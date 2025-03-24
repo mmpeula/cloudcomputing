@@ -32,7 +32,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"Marcos\",\n    \"email\": \"marcos@example.com\"\n}\n",
+					"raw": "{\n    \"name\": \"Marcos\",\n    \"email\": \"marcos@example.com\",\n    \"number\": \"774789658\"\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -59,7 +59,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5000/users/1742384253272",
+					"raw": "http://localhost:5000/users/174240292651",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -67,7 +67,7 @@
 					"port": "5000",
 					"path": [
 						"users",
-						"1742384253272"
+						"174240292651"
 					]
 				}
 			},
@@ -80,7 +80,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"Updated Name\",\n    \"email\": \"updated@example.com\"\n}\n",
+					"raw": "{\n    \"name\": \"Updated Name\",\n    \"email\": \"updated@example.com\",\n    \"number\" : \"66666666\"\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -88,7 +88,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5000/users/1742389691843",
+					"raw": "http://localhost:5000/users/1742405236966",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -96,7 +96,7 @@
 					"port": "5000",
 					"path": [
 						"users",
-						"1742389691843"
+						"1742405236966"
 					]
 				}
 			},
@@ -108,7 +108,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5000/users/1742390673954",
+					"raw": "http://localhost:5000/users/1742402926519",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -116,7 +116,7 @@
 					"port": "5000",
 					"path": [
 						"users",
-						"1742390673954"
+						"1742402926519"
 					]
 				}
 			},
