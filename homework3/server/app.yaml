@@ -1,0 +1,12 @@
+runtime: nodejs20
+env: standard
+
+handlers:
+  - url: /api/.*
+    script: auto
+  - url: /static/(.*)
+    static_files: client/dist/\1
+    upload: client/dist/(.*)
+  - url: /(.*)
+    static_files: client/dist/index.html
+    upload: client/dist/index.html
