@@ -15,6 +15,16 @@ const App = () => {
     setTasks([...tasks, newTask]);
   };
 
+  const editTask = (taskId, updatedTask) => {
+    setTasks(tasks.map(task =>
+      task.id === taskId ? { ...task, ...updatedTask } : task
+    ));
+  };
+
+  const deleteTask = (taskId) => {
+    setTasks(tasks.filter(task => task.id !== taskId));
+  };
+
   const markComplete = (taskId) => {
     setTasks(tasks.map(task =>
       task.id === taskId ? { ...task, status: 'completed' } : task
@@ -32,7 +42,7 @@ const App = () => {
       console.error('Login failed:', error);
     }
   };
-
+  
   const handleLogout = () => {
     instance.logoutRedirect();
     setAccessToken('');
@@ -55,7 +65,12 @@ const App = () => {
           <button onClick={handleLogout}>Sign out</button>
           <TaskForm addTask={addTask} accessToken={accessToken} />
           {}
-          <TaskList tasks={tasks} markComplete={markComplete} />
+          <TaskList 
+            tasks={tasks} 
+            markComplete={markComplete} 
+            editTask={editTask} 
+            deleteTask={deleteTask}
+          />
         </>
       )}
     </div>

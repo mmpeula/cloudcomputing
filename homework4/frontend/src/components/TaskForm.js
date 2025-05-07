@@ -1,4 +1,3 @@
-// src/components/TaskForm.js
 import React, { useState } from 'react';
 
 const TaskForm = ({ addTask }) => {
@@ -9,15 +8,14 @@ const TaskForm = ({ addTask }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // Crear nueva tarea con un ID único
     const newTask = {
-      id: Date.now(), // Usamos el tiempo como un ID único
+      id: Date.now(),
       task_name: taskName,
       due_date: dueDate,
       status: status,
     };
 
-    addTask(newTask); // Pasar la nueva tarea al estado de App
+    addTask(newTask);
 
     setTaskName('');
     setDueDate('');
