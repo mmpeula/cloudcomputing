@@ -1,39 +1,27 @@
+// src/components/TaskForm.js
 import React, { useState } from 'react';
-import axios from 'axios';
 
-const TaskForm = ({ addTask, accessToken }) => {
+const TaskForm = ({ addTask }) => {
   const [taskName, setTaskName] = useState('');
   const [dueDate, setDueDate] = useState('');
   const [status, setStatus] = useState('pending');
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    
+
+    // Crear nueva tarea con un ID único
     const newTask = {
+      id: Date.now(), // Usamos el tiempo como un ID único
       task_name: taskName,
       due_date: dueDate,
       status: status,
     };
 
-    try {
-      const response = await axios.post(
-        'http://localhost:5000/tasks',
-        newTask,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+    addTask(newTask); // Pasar la nueva tarea al estado de App
 
-      addTask(response.data);
-
-      setTaskName('');
-      setDueDate('');
-      setStatus('pending');
-    } catch (error) {
-      console.error('Error adding task:', error);
-    }
+    setTaskName('');
+    setDueDate('');
+    setStatus('pending');
   };
 
   return (
