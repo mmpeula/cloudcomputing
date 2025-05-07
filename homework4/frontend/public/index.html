@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task Manager</title>
+    <script src="https://cdn.jsdelivr.net/npm/@azure/msal-browser@2.0.0/dist/msal-browser.min.js"></script>
+  </head>
+  <body>
+    <div id="root">
+      <h2>Task Manager</h2>
+      <button id="loginButton">Login with Azure Active Directory</button>
+      <div id="userInfo" style="display:none;">
+        <h3>Welcome, <span id="username"></span></h3>
+        <button id="logoutButton">Logout</button>
+      </div>
+    </div>
+
+    <script>
+      const msalConfig = {
+        auth: {
+          clientId: "a9b24a29-200a-4cb6-a00d-c8e40a1cd888",  // Replace with your Application (client) ID
+          authority: "https://login.microsoftonline.com/a8bb09eb-8699-47bf-ba6b-122458d196e7", // Replace with your Directory (tenant) ID
+          redirectUri: "http://localhost:3003/auth/callback", // Redirect URI must match Azure configuration
+        },
+        cache: {
+          cacheLocation: "sessionStorage", // Or "localStorage" if preferred
+          storeAuthStateInCookie: true,
+        }
+      };
+
+      const msalInstance = new msal.PublicClientApplication(msalConfig);
+
+      function login() {
+        const loginRequest = {
+          scopes: ["User.Read"],
+        };
+
+        msalInstance
+          .loginRedirect(loginRequest)  // Using loginRedirect instead of loginPopup
+          .catch((error) => {
+            console.error("Login error:", error);
+          });
+      }
+
+      function handleRedirectCallback() {
+        msalInstance.handleRedirectPromise().then((response) => {
+          if (response) {
+            console.log("Login successful:", response);
+            showUserInfo(response);
+            getToken();
+          }
+        }).catch((error) => {
+          console.error("Redirect callback error:", error);
+        });
+      }
+
+      function getToken() {
+        const tokenRequest = {
+          scopes: ["User.Read"],
+        };
+
+        msalInstance
+          .acquireTokenSilent(tokenRequest)
+          .then((response) => {
+            console.log("Access token:", response.accessToken);
+          })
+          .catch((error) => {
+            console.error("Token acquisition error:", error);
+          });
+      }
+
+      function showUserInfo(response) {
+        document.getElementById("username").innerText = response.account.username;
+        document.getElementById("userInfo").style.display = "block";
+        document.getElementById("loginButton").style.display = "none";
+      }
+
+      function logout() {
+        msalInstance.logout();
+        document.getElementById("userInfo").style.display = "none";
+        document.getElementById("loginButton").style.display = "block";
+      }
+
+      document.getElementById("loginButton").addEventListener("click", login);
+      document.getElementById("logoutButton").addEventListener("click", logout);
+
+      // Check if the user is coming back from the login redirect and handle the response
+      handleRedirectCallback();
+    </script>
+  </body>
+</html>
