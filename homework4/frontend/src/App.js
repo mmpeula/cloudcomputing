@@ -11,19 +11,16 @@ const App = () => {
   const [accessToken, setAccessToken] = useState('');
   const navigate = useNavigate();
 
-  // Agregar nueva tarea
   const addTask = (newTask) => {
     setTasks([...tasks, newTask]);
   };
 
-  // Cambiar estado de tarea a "completada"
   const markComplete = (taskId) => {
     setTasks(tasks.map(task =>
       task.id === taskId ? { ...task, status: 'completed' } : task
     ));
   };
 
-  // Manejo del login
   const handleLogin = async () => {
     try {
       if (!instance.getAllAccounts().length) {
@@ -36,7 +33,6 @@ const App = () => {
     }
   };
 
-  // Manejo del logout
   const handleLogout = () => {
     instance.logoutRedirect();
     setAccessToken('');
@@ -58,7 +54,7 @@ const App = () => {
           <p>Welcome, {accounts[0].username}</p>
           <button onClick={handleLogout}>Sign out</button>
           <TaskForm addTask={addTask} accessToken={accessToken} />
-          {/* Pasa la función markComplete como prop */}
+          {}
           <TaskList tasks={tasks} markComplete={markComplete} />
         </>
       )}
