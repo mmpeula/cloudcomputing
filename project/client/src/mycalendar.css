@@ -1,0 +1,12 @@
+.calendar-container{width:80%;margin:0 auto;font-family:inherit}
+.calendar-header{display:flex;justify-content:center;align-items:center;gap:1rem;margin-bottom:.5rem}
+.calendar-header h2{color:#2ca491;font-size:1.5rem;font-weight:600;text-transform:capitalize}
+.calendar-row{display:grid;grid-template-columns:repeat(7,1fr)}
+.calendar-cell{min-height:110px;padding-top:.4rem;border:1px solid #d9e8e3;box-sizing:border-box;text-align:center;background:#e6f7f0;position:relative}
+.calendar-day-name{background:#2ca491;color:#fff;font-weight:600;display:flex;justify-content:center;align-items:center;min-height:46px}
+.calendar-number{font-weight:600;font-size:1rem;color:#333}
+.calendar-activity{display:block;background:#d63031;color:#fff;border-radius:4px;padding:3px 6px;font-size:.75rem;margin:2px auto;max-width:95%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.disabled{background:#f0f4f3;color:#a0a9a5}
+.has-activity{background:#ffebeb}
+.today{outline:2px solid #ffb703}
+.loading-text{text-align:center;color:#2ca491;margin-top:1rem;font-weight:600}

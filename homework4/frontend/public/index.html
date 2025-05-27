@@ -19,12 +19,12 @@
     <script>
       const msalConfig = {
         auth: {
-          clientId: "a9b24a29-200a-4cb6-a00d-c8e40a1cd888",  // Replace with your Application (client) ID
-          authority: "https://login.microsoftonline.com/a8bb09eb-8699-47bf-ba6b-122458d196e7", // Replace with your Directory (tenant) ID
-          redirectUri: "http://localhost:3003/auth/callback", // Redirect URI must match Azure configuration
+          clientId: "a9b24a29-200a-4cb6-a00d-c8e40a1cd888", 
+          authority: "https://login.microsoftonline.com/a8bb09eb-8699-47bf-ba6b-122458d196e7", 
+          redirectUri: "http://localhost:3003/auth/callback", 
         },
         cache: {
-          cacheLocation: "sessionStorage", // Or "localStorage" if preferred
+          cacheLocation: "sessionStorage",
           storeAuthStateInCookie: true,
         }
       };
@@ -37,7 +37,7 @@
         };
 
         msalInstance
-          .loginRedirect(loginRequest)  // Using loginRedirect instead of loginPopup
+          .loginRedirect(loginRequest) 
           .catch((error) => {
             console.error("Login error:", error);
           });
@@ -85,7 +85,7 @@
       document.getElementById("loginButton").addEventListener("click", login);
       document.getElementById("logoutButton").addEventListener("click", logout);
 
-      // Check if the user is coming back from the login redirect and handle the response
+      
       handleRedirectCallback();
     </script>
   </body>

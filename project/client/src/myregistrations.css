@@ -1,0 +1,60 @@
+.sync-buttons {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .sync-buttons .button-exit {
+    margin-right: 1rem;
+  }
+  
+  .status-message {
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  .status-message.success {
+    color: green;
+  }
+  
+  .status-message.error {
+    color: crimson;
+  }
+  
+  .pagination {
+    margin-top: 2rem;
+    text-align: center;
+  }
+  
+  .pagination-info {
+    margin: 0 1rem;
+    font-weight: bold;
+  }
+  
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+  
+  .modal-content p {
+    margin-bottom: 1rem;
+  }
+  
